@@ -8,9 +8,11 @@ if the program is aborted in the midway , in order to avoid repeated computation
 
 
 for ease : 
-program shall save the latest used path for loading the files . just save it in a text document or a database (user database , logging) 
+-program shall save the latest used path for loading the files . just save it in a text document or a database (user database , logging) 
 add a text box for typing in the COR and Pixel size as well as the sliding bar 
 
+-make a quee list for jobs. when you have many tomographs that havent been reconstructed. you can use a quee to give the initial settings of each 
+such as COR and pixel size , and let them reconstruct over night . 
 
 
 
@@ -37,7 +39,8 @@ install conda
 
 or 2.create a virt env for tomopy and install the tomopy in it 
 
-
-
 install other requirments 
+
+
+
 
