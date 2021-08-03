@@ -1,0 +1,6 @@
+PyQt5
+tkinter
+qimage2ndarray
+numpy
+scipy
+tomopy
