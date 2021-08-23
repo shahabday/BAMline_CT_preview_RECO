@@ -1,8 +1,9 @@
 # FIND COR
 # reads 1st and 3rd file, flips 3rd file, shifts 3rd file and divides it with the 1st => COR is derived from that
+
 import PIL
 from PIL import Image
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets,uic
 import qimage2ndarray
 from PyQt5.uic import loadUiType
 import numpy
@@ -12,21 +13,24 @@ import time
 import tkinter.filedialog
 from PyQt5.QtGui import QIcon, QPixmap
 from scipy import ndimage
+from pyqtgraph import ImageView
 
 import sys
 
 print('We are in find_COR now.')
 
-Ui_COR_finderWindow, QCOR_finderWindow = loadUiType('find_COR.ui')  # GUI vom Hauptfenster
+#Ui_COR_finderWindow, QCOR_finderWindow = loadUiType('find_CORn.ui')  # GUI vom Hauptfenster
 
 
-class COR_finder(Ui_COR_finderWindow, QCOR_finderWindow):
+class COR_finder(QtWidgets.QMainWindow):
 
 
     def __init__(self, path, path_out, index_COR_1, index_COR_2, FF_index, transpose):
         super(COR_finder, self).__init__()
-        self.setupUi(self)
+        #self.setupUi(self)
+        uic.loadUi('find_CORn.ui',self)
         self.setWindowTitle('Find the Center of Rotation')
+        
 
         # defining variables 
         self.path_klick = path
@@ -36,6 +40,8 @@ class COR_finder(Ui_COR_finderWindow, QCOR_finderWindow):
         self.FF_index = FF_index
         self.transpose = transpose
 
+        
+        
         self.COR_slider.valueChanged.connect(self.shift_COR)   #connect the slider to shift_COR functions 
         #self.CORSpinBox.valueChanged.connect(self.shift_COR)
         self.rotate.valueChanged.connect(self.shift_COR)  # connect the changing textbox to the function
@@ -109,7 +115,7 @@ class COR_finder(Ui_COR_finderWindow, QCOR_finderWindow):
         #This part could be in another function so that we dont calculate it each time 
         #if the ckeck box for cropping the image flips , we need to change a global variable wihch defines our image , this way , cropping happens only once when
         #we are changing the sliders
-        
+
 
         if self.crop_horizontal_stripe.isChecked() == True and self.crop_vertical_stripe.isChecked() == True:
             im_180_flipped = self.im_180_flipped[round(self.full_size_y*4.5/10):round(self.full_size_y*5.5/10),round(self.full_size*4.5/10):round(self.full_size*5.5/10)]
@@ -145,8 +151,26 @@ class COR_finder(Ui_COR_finderWindow, QCOR_finderWindow):
 
         #prepares the image to show 
         myarray = divided2 * contrast - (contrast - 128)   # 2048 - 1920
+        # shows the image usind qimage2ndarray
+
         yourQImage = qimage2ndarray.array2qimage(myarray)
-        self.divided.setPixmap(QPixmap(yourQImage))
+        #self.divided.setPixmap(QPixmap(yourQImage))
+
+
+        #just for debug sake i want to save images : 
+        #using Image from PIL 
+        '''
+        for fname,img in enumerate([self.rotated,im_180_flipped,im_180_flipped_shifted,divided,myarray]):
+            d = Image.fromarray(img)
+            d.save('{}.tif'.format(fname))
+        '''
+
+        
+            
+        self.pyqtWidget.setImage(divided2)
+        print('using first methode')
+
+       
         print('find COR shift')
 
 
